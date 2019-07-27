@@ -133,16 +133,28 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
-    pass
-
+    # Create a new hash table because we're going to use the functions we already created.
+    newHT = HashTable(hash_table.capacity * 2)
+    # 0(n) We're going through and shuffling things over to the new array(list)
+    for i in range(0, len(hash_table.storage)):
+        currentNode = hash_table.storage[i] # If we've fallen out of the loop below, this is set at a base node not a collision.
+        # This will loop until we're done with any collisioned LinkedList
+        while currentNode is not None:
+            hash_table_insert(newHT, currentNode.key, currentNode.value) # This inserts everything, base nodes and collisioned lists
+            # We're going to check for any collisioned nodes here and reset things in the new hash table
+            currentNode = currentNode.next
+            
+    return newHT
 
 def Testing():
+    
     ht = HashTable(2)
 
     hash_table_insert(ht, "line_1", "Tiny hash table")
     hash_table_insert(ht, "line_2", "Filled beyond capacity")
     hash_table_insert(ht, "line_3", "Linked list saves the day!")
     
+    ht = hash_table_resize(ht)
     print(hash_table_retrieve(ht, "line_1"))
     print(hash_table_retrieve(ht, "line_2"))
     print(hash_table_retrieve(ht, "line_3"))
@@ -160,12 +172,13 @@ def Testing():
     print(hash_table_retrieve(ht, "line_1"))
     print(hash_table_retrieve(ht, "line_2"))
     print(hash_table_retrieve(ht, "line_3"))
-    #old_capacity = len(ht.storage)
-    #ht = hash_table_resize(ht)
-    #new_capacity = len(ht.storage)
+    
+    old_capacity = len(ht.storage)
+    ht = hash_table_resize(ht)
+    new_capacity = len(ht.storage)
 
-    #print("Resized hash table from " + str(old_capacity)
-    #      + " to " + str(new_capacity) + ".")
-
+    print("Resized hash table from " + str(old_capacity)
+        + " to " + str(new_capacity) + ".")
+    
 
 Testing()
